@@ -7,7 +7,7 @@
 #define MQTT_SERV "io.adafruit.com"
 #define MQTT_PORT 1883
 #define MQTT_NAME "tstark20486"
-#define MQTT_PASS "aio_SPVa88vPFZ0yhRckxUaXRkiaTbnz"
+#define MQTT_PASS "AIO KEY"
 
 //ADD WIFI DETAILS
 #define WIFI_SSID "PLUSNET-GFMNNG"
