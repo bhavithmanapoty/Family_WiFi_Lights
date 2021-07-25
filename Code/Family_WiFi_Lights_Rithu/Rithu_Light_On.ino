@@ -8,7 +8,7 @@ void checkIfRithuLightOn()
       if (!strcmp((char*) RithuLightSub.lastread, "ON"))
       {
         //Switch ON LED
-        Serial.println("Home LED ON");
+        Serial.println("Rithika Light ON");
         for(int i = 0; i < 5; i++){
         digitalWrite(RithuLight, HIGH);
         delay(800);
@@ -20,7 +20,7 @@ void checkIfRithuLightOn()
       {
         //Switch OFF LED
         digitalWrite(RithuLight, LOW);
-        Serial.println("Home LED OFF");
+        Serial.println("Rithika Light OFF");
       }
       else
       {

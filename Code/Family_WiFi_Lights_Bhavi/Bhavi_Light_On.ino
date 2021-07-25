@@ -8,7 +8,7 @@ void checkIfBhaviLightOn()
       if (!strcmp((char*) BhaviLightSub.lastread, "ON"))
       {
         //Switch ON LED
-        Serial.println("Home LED ON");
+        Serial.println("Bhavith Light ON");
         for(int i = 0; i < 5; i++){
         digitalWrite(BhaviLight, HIGH);
         delay(800);
@@ -20,7 +20,7 @@ void checkIfBhaviLightOn()
       {
         //Switch OFF LED
         digitalWrite(BhaviLight, LOW);
-        Serial.println("Home LED OFF");
+        Serial.println("Bhavith Light OFF");
       }
       else
       {

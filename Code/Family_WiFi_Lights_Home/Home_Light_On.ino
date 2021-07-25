@@ -8,7 +8,7 @@ void checkIfHomeLightOn()
       if (!strcmp((char*) HomeLightSub.lastread, "ON"))
       {
         //Switch ON LED
-        Serial.println("Home LED ON");
+        Serial.println("Home Light ON");
         for(int i = 0; i < 5; i++){
         digitalWrite(HomeLight, HIGH);
         delay(800);
@@ -20,7 +20,7 @@ void checkIfHomeLightOn()
       {
         //Switch OFF LED
         digitalWrite(HomeLight, LOW);
-        Serial.println("Home LED OFF");
+        Serial.println("Home Light OFF");
       }
       else
       {
