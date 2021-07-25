@@ -1,25 +1,25 @@
-void checkIfBhaviLightOn()
+void checkIfRithuLightOn()
 {
   Adafruit_MQTT_Subscribe * subscription;
   while ((subscription = mqtt.readSubscription(5000)))
   {
-    if (subscription == &BhaviLightSub)
+    if (subscription == &RithuLightSub)
     {
-      if (!strcmp((char*) BhaviLightSub.lastread, "ON"))
+      if (!strcmp((char*) RithuLightSub.lastread, "ON"))
       {
         //Switch ON LED
         Serial.println("Home LED ON");
         for(int i = 0; i < 5; i++){
-        digitalWrite(BhaviLight, HIGH);
+        digitalWrite(RithuLight, HIGH);
         delay(800);
-        digitalWrite(BhaviLight, LOW);
+        digitalWrite(RithuLight, LOW);
         delay(500);
         }
       }
-      else if (!strcmp((char*) BhaviLightSub.lastread, "OFF"))
+      else if (!strcmp((char*) RithuLightSub.lastread, "OFF"))
       {
         //Switch OFF LED
-        digitalWrite(BhaviLight, LOW);
+        digitalWrite(RithuLight, LOW);
         Serial.println("Home LED OFF");
       }
       else

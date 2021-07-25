@@ -14,15 +14,23 @@
 #define WIFI_PASS "d3f3df47fc"
 
 //Define Hardware Setup
+//LIGHTS
+#define BhaviLight D3
+#define HomeLED D4
+#define RithuLED D5
+//SWITCHES
 #define HomeTouchSw D6
 #define RithuTouchSw D7
-#define LED D5
+
 
 //Initialize Connection to Adafruit
 WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, MQTT_SERV, MQTT_PORT, MQTT_NAME, MQTT_PASS);
 
+//Adafruit Subscription Feeds
 Adafruit_MQTT_Subscribe BhaviLightSub = Adafruit_MQTT_Subscribe(&mqtt, MQTT_NAME "/f/BhaviLightState");
+
+//Adafruit Publishing Feeds
 Adafruit_MQTT_Publish HomeLightPub = Adafruit_MQTT_Publish(&mqtt, MQTT_NAME "/f/HomeLightState");
 Adafruit_MQTT_Publish RithuLightPub = Adafruit_MQTT_Publish(&mqtt, MQTT_NAME "/f/RithuLightState");
 
@@ -33,7 +41,9 @@ void setup() {
   //Hardware Setup
   pinMode(HomeTouchSw, INPUT);
   pinMode(RithuTouchSw, INPUT);
-  pinMode(LED, OUTPUT);
+  pinMode(HomeLED, OUTPUT);
+  pinMode(RithuLED, OUTPUT);
+  pinMode(BhaviLight, OUTPUT);
 
   //Connect to  WiFi
   Serial.print("\n\nConnecting Wifi>");
@@ -65,6 +75,6 @@ void loop() {
   //If Touch Rithu Switch
   if (digitalRead(RithuTouchSw))
   {
-    //RithuSwitchTouched();
+    RithuSwitchTouched();
   }
 }
