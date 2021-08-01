@@ -8,7 +8,7 @@
 #define MQTT_SERV "io.adafruit.com"
 #define MQTT_PORT 1883
 #define MQTT_NAME "tstark20486"
-#define MQTT_PASS "aio_jXiE68IwYqcEy9kBr7f0rFsuW1XQ"
+#define MQTT_PASS "API KEY"
 
 //Adafruit Ping
 #define MQTT_KEEP_ALIVE 300
