@@ -1,7 +1,7 @@
 void checkIfHomeLightOn()
 {
   Adafruit_MQTT_Subscribe * subscription;
-  while ((subscription = mqtt.readSubscription(5000)))
+  while ((subscription = mqtt.readSubscription(1500)))
   {
     if (subscription == &HomeLightSub)
     {
@@ -9,18 +9,16 @@ void checkIfHomeLightOn()
       {
         //Switch ON LED
         Serial.println("Home Light ON");
-        for(int i = 0; i < 5; i++){
-        digitalWrite(HomeLight, HIGH);
-        delay(800);
-        digitalWrite(HomeLight, LOW);
-        delay(500);
-        }
+        rainbow_wave(25, 10);
+        FastLED.show();
+        delay(5000);
+        FastLED.clear();
       }
       else if (!strcmp((char*) HomeLightSub.lastread, "OFF"))
       {
         //Switch OFF LED
-        digitalWrite(HomeLight, LOW);
         Serial.println("Home Light OFF");
+        FastLED.clear();
       }
       else
       {
@@ -28,4 +26,14 @@ void checkIfHomeLightOn()
       }
     }
   }
+}
+
+void rainbow_wave(uint8_t thisSpeed, uint8_t deltaHue) {
+
+// uint8_t thisHue = beatsin8(thisSpeed,0,255);
+ uint8_t thisHue = beat8(thisSpeed,255);
+  
+ fill_rainbow(Light1, NUM_LEDS, thisHue, deltaHue);
+ fill_rainbow(Light2, NUM_LEDS, thisHue, deltaHue);
+
 }
