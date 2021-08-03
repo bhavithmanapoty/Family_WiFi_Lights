@@ -1,5 +1,6 @@
 //Include required libraries
 #include <ESP8266WiFi.h>
+#include <FastLED.h>
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
@@ -9,18 +10,34 @@
 #define MQTT_NAME "tstark20486"
 #define MQTT_PASS "API KEY"
 
+//Adafruit Ping
+#define MQTT_KEEP_ALIVE 300
+unsigned long previousTime = 0;
+
+//Light State
+int LightState = 0;
+
 //ADD WIFI DETAILS
 #define WIFI_SSID "PLUSNET-GFMNNG"
 #define WIFI_PASS "d3f3df47fc"
 
+//#define WIFI_SSID "OnePlus 6"
+//#define WIFI_PASS "fuggoff123"
+
 //Define Hardware Setup
 //LIGHTS
-#define HomeLight D3
-#define BhaviLED D4
-#define RithuLED D5
+#define HomeLight1 D2
+#define HomeLight2 D3
 //SWITCHES
-#define BhaviTouchSw D6
-#define RithuTouchSw D7
+#define BhaviTouchSw D5
+#define RithuTouchSw D6
+#define LightOnSw D7
+
+//LED Strip Setup
+#define FASTLED_ALLOW_INTERRUPTS 0
+#define NUM_LEDS 15
+struct CRGB Light1[NUM_LEDS];
+struct CRGB Light2[NUM_LEDS];
 
 //Initialize Connection to Adafruit
 WiFiClient client;
@@ -38,11 +55,9 @@ void setup() {
   Serial.begin(9600);
 
   //Hardware Setup
-  pinMode(BhaviTouchSw, INPUT);
-  pinMode(RithuTouchSw, INPUT);
-  pinMode(BhaviLED, OUTPUT);
-  pinMode(RithuLED, OUTPUT);
-  pinMode(HomeLight, OUTPUT);
+  pinMode(BhaviTouchSw, INPUT_PULLUP);
+  pinMode(RithuTouchSw, INPUT_PULLUP);
+  pinMode(LightOnSw, INPUT_PULLUP);
 
   //Connect to  WiFi
   Serial.print("\n\nConnecting Wifi>");
@@ -56,24 +71,50 @@ void setup() {
 
   //Subscribe to Adafruit Feeds
   mqtt.subscribe(&HomeLightSub);
+
+  //LED Strip Setup
+  LEDS.addLeds<WS2812, HomeLight1, GRB>(Light1, NUM_LEDS);
+  LEDS.addLeds<WS2812, HomeLight2, GRB>(Light2, NUM_LEDS);
+  FastLED.setBrightness(255);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 1000);
+  FastLED.clear();
 }
 
 void loop() {
-  //Connect/Reconnect to MQTT Server
-  MQTT_connect();
-
-  //Checks is someone is contacting Home light
-  checkIfHomeLightOn();
-
+   //Connect/Reconnect to MQTT Server
+  if(!mqtt.connected()){
+    MQTT_connect();
+  }
+  
+  //If Touch Light Switch
+  if (!digitalRead(LightOnSw))
+  {
+    if(LightState == 0){
+    LightState = 1;
+    }
+    else 
+    {
+     LightState = 0;
+    }
+  }
   //If Touch Bhavith Switch
-  if (digitalRead(BhaviTouchSw))
+  else if (!digitalRead(BhaviTouchSw))
   {
     BhaviSwitchTouched();
   }
 
   //If Touch Rithu Switch
-  if (digitalRead(RithuTouchSw))
+  else if (!digitalRead(RithuTouchSw))
   {
     RithuSwitchTouched();
   }
+  
+  //Checks is someone is contacting Home light
+  else
+  {
+    //checkIfHomeLightOn();
+  }
+
+  //Turn on Light depending on current state
+  HomeSwitchTouched(LightState);
 }
