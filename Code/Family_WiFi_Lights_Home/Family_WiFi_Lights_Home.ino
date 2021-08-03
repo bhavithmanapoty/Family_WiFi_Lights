@@ -13,24 +13,25 @@
 //Adafruit Ping
 #define MQTT_KEEP_ALIVE 300
 unsigned long previousTime = 0;
-int state = 0;
+
+//Light State
+int LightState = 0;
 
 //ADD WIFI DETAILS
-//#define WIFI_SSID "PLUSNET-GFMNNG"
-//#define WIFI_PASS "d3f3df47fc"
+#define WIFI_SSID "PLUSNET-GFMNNG"
+#define WIFI_PASS "d3f3df47fc"
 
-#define WIFI_SSID "OnePlus 6"
-#define WIFI_PASS "fuggoff123"
+//#define WIFI_SSID "OnePlus 6"
+//#define WIFI_PASS "fuggoff123"
 
 //Define Hardware Setup
 //LIGHTS
 #define HomeLight1 D2
 #define HomeLight2 D3
-
 //SWITCHES
-#define BhaviTouchSw D7
-#define RithuTouchSw D5
-#define LightOnSw D8
+#define BhaviTouchSw D5
+#define RithuTouchSw D6
+#define LightOnSw D7
 
 //LED Strip Setup
 #define FASTLED_ALLOW_INTERRUPTS 0
@@ -54,9 +55,9 @@ void setup() {
   Serial.begin(9600);
 
   //Hardware Setup
-  pinMode(BhaviTouchSw, INPUT);
-  pinMode(RithuTouchSw, INPUT);
-  pinMode(LightOnSw, INPUT);
+  pinMode(BhaviTouchSw, INPUT_PULLUP);
+  pinMode(RithuTouchSw, INPUT_PULLUP);
+  pinMode(LightOnSw, INPUT_PULLUP);
 
   //Connect to  WiFi
   Serial.print("\n\nConnecting Wifi>");
@@ -80,37 +81,40 @@ void setup() {
 }
 
 void loop() {
-
    //Connect/Reconnect to MQTT Server
   if(!mqtt.connected()){
     MQTT_connect();
   }
   
   //If Touch Light Switch
-  if (digitalRead(LightOnSw))
+  if (!digitalRead(LightOnSw))
   {
-    if(state == 0){
-    HomeSwitchTouched(1);
-    state = 1;
+    if(LightState == 0){
+    LightState = 1;
     }
     else 
     {
-     HomeSwitchTouched(0);
-     state = 0;
+     LightState = 0;
     }
   }
   //If Touch Bhavith Switch
-  if (digitalRead(BhaviTouchSw))
+  else if (!digitalRead(BhaviTouchSw))
   {
     BhaviSwitchTouched();
   }
 
   //If Touch Rithu Switch
-  if (digitalRead(RithuTouchSw))
+  else if (!digitalRead(RithuTouchSw))
   {
     RithuSwitchTouched();
   }
-
+  
   //Checks is someone is contacting Home light
-  //checkIfHomeLightOn();
+  else
+  {
+    //checkIfHomeLightOn();
+  }
+
+  //Turn on Light depending on current state
+  HomeSwitchTouched(LightState);
 }

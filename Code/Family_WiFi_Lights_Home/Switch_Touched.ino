@@ -1,12 +1,12 @@
 void HomeSwitchTouched(int state)
 {
-  
-  if(state == 1)
+
+  if (state == 1)
   {
     LED_On('w');
     Serial.println("LIGHT ON");
   }
-  else if(state == 0)
+  else if (state == 0)
   {
     LED_On('0');
     Serial.println("LIGHT OFF");
